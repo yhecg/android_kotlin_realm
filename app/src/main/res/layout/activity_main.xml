@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btn_insert"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="데이터 추가" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btn_read"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="데이터 보기" />
+
+    <Button
+        android:id="@+id/btn_last_data_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="마지막 데이터 수정" />
+
+    <Button
+        android:id="@+id/btn_last_data_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="마지막 데이터 삭제" />
+
+    <Button
+        android:id="@+id/btn_all_data_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="전체 데이터 삭제" />
+
+</LinearLayout>
