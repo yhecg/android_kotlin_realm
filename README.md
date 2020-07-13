@@ -183,9 +183,26 @@ val conf : RealmConfiguration =
 
 <span style="color:red">아직 정확한 정보가 아니지만 일단 적어둔다</span>
 
+```java
+public class Util {
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    //Original source: https://stackoverflow.com/a/9855338/1389357
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+}
+```
+
 ```kotlin
 val key = ByteArray(64)
 SecureRandom().nextBytes(key)
+Log.d("RealmEncryptionKey", Util.bytesToHex(key))
 val conf : RealmConfiguration = RealmConfiguration.Builder()
     .name("default.realm")
     .encryptionKey(key)
