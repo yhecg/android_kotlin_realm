@@ -11,19 +11,6 @@ class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
     private lateinit var realm:Realm
 
-    private fun realmJoin(){
-        realm.beginTransaction()
-        val user:UserModel = realm.createObject(UserModel::class.java, realmLastIndex())
-        val email01: EmailModel = realm.createObject(EmailModel::class.java)
-        email01.address = "aaa@naver.com"
-        user.emails?.add(email01)
-        val email02: EmailModel = realm.createObject(EmailModel::class.java)
-        email02.address = "bbb@google.com"
-        user.emails?.add(email02)
-        realm.commitTransaction()
-        realmRead()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -76,6 +63,20 @@ class MainActivity : AppCompatActivity() {
             index.toInt() + 1
         }
         return lastIndex
+    }
+
+    // 두개 이상의 모델 사용
+    private fun realmJoin(){
+        realm.beginTransaction()
+        val user:UserModel = realm.createObject(UserModel::class.java, realmLastIndex())
+        val email01: EmailModel = realm.createObject(EmailModel::class.java)
+        email01.address = "aaa@naver.com"
+        user.emails?.add(email01)
+        val email02: EmailModel = realm.createObject(EmailModel::class.java)
+        email02.address = "bbb@google.com"
+        user.emails?.add(email02)
+        realm.commitTransaction()
+        realmRead()
     }
 
     // 데이터 추가
