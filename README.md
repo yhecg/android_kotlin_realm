@@ -3,7 +3,7 @@
 Realm 이란 ?
 ------------
 
-오픈 소스 데이터베이스 관리시스템(DBMS). NoSQL 데이터베이스를 지향하며, 데이터 모델 구조 자체가 객체 컨테이너로 구성되어 있다.<br><br>![screensh](./mdImg/query_compare.png) - Realm과 타 데이터베이스의 초당 쿼리수 비교
+오픈 소스 데이터베이스 관리시스템(DBMS).<br>NoSQL 데이터베이스를 지향하며, 데이터 모델 구조 자체가 객체 컨테이너로 구성되어 있다.<br><br>![screensh](./mdImg/query_compare.png)<br> Realm과 타 데이터베이스의 초당 쿼리수 비교
 
 제한
 ----
