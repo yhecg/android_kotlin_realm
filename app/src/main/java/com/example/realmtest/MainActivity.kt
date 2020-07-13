@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     // 마지막 데이터의 index + 1
     private fun realmLastIndex(): Int {
-        val index = realm.where(UserModule::class.java).max("index")
+        val index = realm.where(UserModel::class.java).max("index")
         val lastIndex = if(index == null){
             1
         }else{
@@ -65,16 +65,17 @@ class MainActivity : AppCompatActivity() {
     // 데이터 추가
     private fun realmInsert(){
         realm.beginTransaction()
-        val user:UserModule = realm.createObject(UserModule::class.java, realmLastIndex())
+        val user:UserModel = realm.createObject(UserModel::class.java, realmLastIndex())
         user.name = "이름"
         realm.commitTransaction()
+        realmRead()
     }
 
     // 데이터 보기
     private fun realmRead(){
         realm.beginTransaction()
-        val realmResult:RealmResults<UserModule> =
-            realm.where(UserModule::class.java).findAll().sort("index", Sort.ASCENDING)
+        val realmResult:RealmResults<UserModel> =
+            realm.where(UserModel::class.java).findAll().sort("index", Sort.ASCENDING)
         realm.commitTransaction()
         Log.d(TAG, "realmRead : " + realmResult.asJSON())
     }
@@ -82,28 +83,31 @@ class MainActivity : AppCompatActivity() {
     // 마지막 데이터 수정
     private fun realmLastDataUpdate(){
         realm.beginTransaction()
-        val realmResult: UserModule? =
-            realm.where(UserModule::class.java).equalTo("index", realmLastIndex()-1).findFirst()
+        val realmResult: UserModel? =
+            realm.where(UserModel::class.java).equalTo("index", realmLastIndex()-1).findFirst()
         realmResult?.name = "수정"
         realm.commitTransaction()
+        realmRead()
     }
 
     // 마지막 데이터 삭제
     private fun realmLastDataDelete(){
         realm.beginTransaction()
-        val realmResult: UserModule? =
-            realm.where(UserModule::class.java).equalTo("index", realmLastIndex()-1).findFirst()
+        val realmResult: UserModel? =
+            realm.where(UserModel::class.java).equalTo("index", realmLastIndex()-1).findFirst()
         realmResult?.deleteFromRealm()
         realm.commitTransaction()
+        realmRead()
     }
 
     // 전체 데이터 삭제
     private fun realmAllDataDelete(){
         realm.beginTransaction()
-        val result: RealmResults<UserModule> =
-            realm.where(UserModule::class.java).findAll()
+        val result: RealmResults<UserModel> =
+            realm.where(UserModel::class.java).findAll()
         result.deleteAllFromRealm()
         realm.commitTransaction()
+        realmRead()
     }
 
 }
