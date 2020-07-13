@@ -125,10 +125,48 @@ DELETE
 
 ```kotlin
 realm.beginTransaction()
+// 데이터 하나 삭제 
 val user: UserModel =
     realm.where(UserModel::class.java).equalTo("index", position).findFirst()
-user.필드명 = 수정할 값 // user.name = "수정"
+user.deleteFromRealm()
+// 데이터 전체 삭제 
+val result: RealmResults<UserModel> =
+    realm.where(UserModel::class.java).findAll()
+result.deleteAllFromRealm()
 realm.commitTransaction()
 ```
-
 <br>
+
+Migration
+-----------
+```kotlin
+open class UserModel : RealmObject() {
+    @PrimaryKey var index:Int = 0
+    var name: String = ""
+    var migrationTest: String? = "" // 추가로 생성한 필드
+}
+```
+```kotlin
+open class Migration : RealmMigration {
+    override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
+        var oldVer = oldVersion
+        val schema = realm.schema
+        if(oldVer == 0L){
+            val tdmSchema = schema.get("UserModule")
+            tdmSchema.addField("migrationTest", String::class.java)
+        }
+    }
+}
+```
+```kotlin
+val conf : RealmConfiguration =
+            RealmConfiguration.Builder()
+            .name("default.realm")
+            .schemaVersion(1)
+            .migration(Migration())
+            .build()
+```
+- 데이터 모델이 수정되는 경우에는 Migration 관리를 해줘야 한다.
+- Migration 클래스를 생성하여 변경된 사항을 기록해준다.
+- Realm 설정 부분에서 schemaVersion을 수정해주고 migration을 추가해준다.
+
