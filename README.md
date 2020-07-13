@@ -1,7 +1,9 @@
+<br>
+
 Realm 이란 ?
 ------------
 
-오픈 소스 데이터베이스 관리시스템(DBMS). NoSQL 데이터베이스를 지향하며, 데이터 모델 구조 자체가 객체 컨테이너로 구성되어 있다. - Realm과 타 데이터베이스의 초당 쿼리수 비교 ![screensh](./mdImg/query_compare.png)
+오픈 소스 데이터베이스 관리시스템(DBMS). NoSQL 데이터베이스를 지향하며, 데이터 모델 구조 자체가 객체 컨테이너로 구성되어 있다.<br><br>![screensh](./mdImg/query_compare.png) - Realm과 타 데이터베이스의 초당 쿼리수 비교
 
 제한
 ----
@@ -38,7 +40,11 @@ open class UserModel : RealmObject() {
 }
 ```
 
--	모델 클래스는 SQL의 테이블을 생각하면 될 것 같다. Table : UserModel Column : index, name
+-	모델 클래스는 SQL의 테이블을 생각하면 될 것 같다.<br> Table : UserModel Column : index, name
+-	Realm 필드 타입 지원 : short, int, long -> long타입으로 대응. Boolean, Byte, Short, Integer, Long, Double -> null 가능
+-	@Required 어노테이션은 null 값 허용하지 않음 (Boolean, Byte, Short, Integer, Long, Float, Double, String, ByteArray, Date)
+-	RealmList 는 암묵적으로 Required.
+-	RealmObject 형의 필드는 항상 null 가능.
 
 시작(선언)
 ----------
@@ -176,7 +182,45 @@ val conf : RealmConfiguration =
 -	데이터 모델이 수정되는 경우에는 Migration 관리를 해줘야 한다.
 -	Migration 클래스를 생성하여 변경된 사항을 기록해준다.
 -	Realm 설정 부분에서 schemaVersion을 수정해주고 migration을 추가해준다. 데이터 모델을 수정될때마다 schemeVersion을 한단계씩 올려야한다.
--	데이터 모델을 수정하였는데 이러한 작업을 해주지 않으면 다음 오류가 나타난다.<br><span style="color:red">io.realm.exceptions.RealmMigrationNeededException: Field count is less than expected</span>
+-	데이터 모델을 수정하였는데 이러한 작업을 해주지 않으면 다음 오류가 나타난다.<br><span style="color:red">io.realm.exceptions.RealmMigrationNeededException: Field count is less than expected</span><br>
+
+두개 이상의 모델 사용하기
+-------------------------
+
+```kotlin
+open class UserModel : RealmObject() {
+    @PrimaryKey var index:Int = 0
+    var name: String = ""
+    var emails:RealmList<EmailModel>? = null // 추가
+}
+open class EmailModel : RealmObject(){ // 추가
+    var address:String = ""
+}
+```
+
+```kotlin
+realm.beginTransaction()
+val index = realm.where(UserModel::class.java).max("index")
+val nextIndex = if(index == null){
+  1
+}else{
+  index.toInt() + 1
+}
+
+val user:UserModel = realm.createObject(UserModel::class.java, nextIndex)
+
+val email01: EmailModel = realm.createObject(EmailModel::class.java)
+email01.address = "aaa@naver.com"
+user.emails.add(email01)
+
+val email02: EmailModel = realm.createObject(EmailModel::class.java)
+email02.address = "bbb@google.com"
+user.emails.add(email02)
+
+realm.commitTransaction()
+
+// 결과값 Ex) [{"index":1,"name":"","migrationTest":"","emails":[{"address":"aaa@naver.com"}, {"address":"bbb@google.com"}]}]
+```
 
 <span style="color:red">Encryption 암호화</span>
 ------------------------------------------------
@@ -209,4 +253,4 @@ val conf : RealmConfiguration = RealmConfiguration.Builder()
     .build()
 ```
 
--	아직 암호화에 대해 정확히 알지 못하고 위 설정 및 해제의 설명이 전부이다.<br>설명 : 64Byte 암호화 키 처음 32Byte 는 암호화에 사용되고 다음 24Byte 는 서명에 사용되고 8Byte 는 현재 사용 X. 각 4KB 데이터 블록은 암호화 블록체인(CBC) 모드와 파일 내에서 절대 재사용되지 않는 고유한 초기화 백터(IV)를 사용하여 AES-256으로 암호화 된 후 SHA 로 서명.
+-	아직 암호화에 대해 정확히 알지 못하고 위 설정 및 해제의 설명이 전부이다.<br>설명 : 64Byte 암호화 키 처음 32Byte 는 암호화에 사용되고 다음 24Byte 는 서명에 사용되고 8Byte 는 현재 사용 X. 각 4KB 데이터 블록은 암호화 블록체인(CBC) 모드와 파일 내에서 절대 재사용되지 않는 고유한 초기화 백터(IV)를 사용하여 AES-256으로 암호화 된 후 SHA 로 서명.<br>

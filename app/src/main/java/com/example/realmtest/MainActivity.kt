@@ -11,6 +11,19 @@ class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
     private lateinit var realm:Realm
 
+    private fun realmJoin(){
+        realm.beginTransaction()
+        val user:UserModel = realm.createObject(UserModel::class.java, realmLastIndex())
+        val email01: EmailModel = realm.createObject(EmailModel::class.java)
+        email01.address = "aaa@naver.com"
+        user.emails?.add(email01)
+        val email02: EmailModel = realm.createObject(EmailModel::class.java)
+        email02.address = "bbb@google.com"
+        user.emails?.add(email02)
+        realm.commitTransaction()
+        realmRead()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,6 +47,9 @@ class MainActivity : AppCompatActivity() {
 
     // Click Event 설정
     private fun initClickEvent(){
+        btn_join.setOnClickListener{
+            realmJoin()
+        }
         btn_insert.setOnClickListener{
             realmInsert()
         }

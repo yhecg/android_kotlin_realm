@@ -20,9 +20,9 @@ object RealmManager {
 //            Log.d(TAG, "key : " + Util.bytesToHex(key))
             val conf : RealmConfiguration = RealmConfiguration.Builder()
                 .name("default.realm")
-                .schemaVersion(1)
-                .migration(Migration())
                 .deleteRealmIfMigrationNeeded() // 개발단계에서만 사용하자
+//                .schemaVersion(1)
+//                .migration(Migration())
 //                .encryptionKey(key)
                 .build()
             instance = Realm.getInstance(conf)

@@ -1,5 +1,6 @@
 package com.example.realmtest
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmModule
@@ -14,4 +15,10 @@ open class UserModel : RealmObject() {
     var name: String = ""
     var migrationTest: String? = "" // 추가로 생성한 필드. Migration
 
+    var emails:RealmList<EmailModel>? = null
+
+}
+
+open class EmailModel : RealmObject(){
+    var address:String = ""
 }

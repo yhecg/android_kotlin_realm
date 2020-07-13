@@ -9,6 +9,12 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/btn_join"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="두개의 모델 조인 데이터 추가" />
+
+    <Button
         android:id="@+id/btn_insert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
