@@ -75,8 +75,13 @@ class MainActivity : AppCompatActivity() {
         val email02: EmailModel = realm.createObject(EmailModel::class.java)
         email02.address = "bbb@google.com"
         user.emails?.add(email02)
+        user.name = "철수"
+
+        val result:RealmResults<UserModel> = realm.where(UserModel::class.java)
+            .equalTo("emails.address", "bbb@google.com").findAll()
+            .where().equalTo("name", "철수").findAll()
+        Log.d(TAG, "realmJoin : " + result.asJSON())
         realm.commitTransaction()
-        realmRead()
     }
 
     // 데이터 추가

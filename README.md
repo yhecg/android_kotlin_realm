@@ -207,20 +207,33 @@ val nextIndex = if(index == null){
   index.toInt() + 1
 }
 
+// 1
 val user:UserModel = realm.createObject(UserModel::class.java, nextIndex)
 
+// 2
 val email01: EmailModel = realm.createObject(EmailModel::class.java)
 email01.address = "aaa@naver.com"
 user.emails.add(email01)
 
+// 3
 val email02: EmailModel = realm.createObject(EmailModel::class.java)
 email02.address = "bbb@google.com"
 user.emails.add(email02)
+user.name = "철수"
+
+// 4
+val result:RealmResults<UserModel> = realm.where(UserModel::class.java)
+            .equalTo("emails.address", "bbb@google.com").findAll()
+            .where().equalTo("name", "철수").findAll()
+Log.d(TAG, "realmJoin : " + result.asJSON())
 
 realm.commitTransaction()
-
-// 결과값 Ex) [{"index":1,"name":"","migrationTest":"","emails":[{"address":"aaa@naver.com"}, {"address":"bbb@google.com"}]}]
 ```
+
+1.	EmailModel을 감싸는 UserModel을 생성.
+2.	EmailModel을 생성하여 UserModel에 넣어준다.
+3.	EmailModel을 생성하여 UserModel에 넣어준다.
+4.	3번의 결과값을 불러온다.<br> ex) [{"index":1,"name":"철수","emails":[{"address":"aaa@naver.com"}, {"address":"bbb@google.com"}]}]
 
 <span style="color:red">Encryption 암호화</span>
 ------------------------------------------------
